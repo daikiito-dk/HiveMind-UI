@@ -1,0 +1,40 @@
+[project]
+name = "hivemind-ui"
+version = "0.1.0"
+description = "HiveMind-UI: real-time persona-linked autonomous UI testing agent (Grok x Computer Use)"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.11"
+dependencies = [
+    "openai>=1.60",
+    "playwright>=1.50",
+    "pydantic>=2.6",
+    "pillow>=10.3",
+    "python-dotenv>=1.0",
+    "streamlit>=1.40",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.8",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["hivemind"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

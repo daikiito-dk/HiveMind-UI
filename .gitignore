@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+# Environment
+.env
+
+# Run artifacts (sessions, screenshots, replays, reports)
+runs/
+
+# Tooling
+.pytest_cache/
+.ruff_cache/
+.streamlit/
+uv.lock
+
+# OS
+.DS_Store

@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>みなと銀行</title>
+<style>
+  body { font-family: "MS PGothic", "Hiragino Kaku Gothic Pro", serif; background: #ffffff; color: #000; margin: 0; font-size: 11px; }
+  a { color: #0000cc; text-decoration: underline; font-size: 10px; }
+  a:visited { color: #660099; }
+  .header { background: #eef2f7; border-bottom: 1px solid #999; padding: 6px 16px; }
+  .ticker { font-size: 10px; color: #333; background: #ffffcc; border: 1px solid #ccc; padding: 2px 6px; margin-top: 4px; }
+  .nav { padding: 4px 16px; background: #f7f7f7; border-bottom: 2px solid #336699; }
+  .nav a { font-size: 10px; margin-right: 6px; }
+  .content { padding: 10px 16px; }
+  table.form { border-collapse: collapse; }
+  table.form td { border: 1px solid #999; padding: 4px 8px; font-size: 11px; }
+  button { font-family: inherit; font-size: 11px; padding: 2px 10px; background: #eee; border: 2px outset #ccc; }
+  input, select { font-family: inherit; font-size: 11px; }
+  .note { font-size: 9px; color: #444; }
+  #modal { position: absolute; left: 140px; top: 210px; width: 640px; background: #ffffcc;
+           border: 2px ridge #999; padding: 10px 14px; z-index: 5; }
+  .footer { margin-top: 30px; border-top: 1px solid #999; padding: 8px 16px; font-size: 9px; color: #555; }
+  .err { color: #cc0000; font-size: 10px; display: none; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="font-size:22px; font-weight:bold;">みなと銀行 - MINATO BANK</div>
+  <div class="ticker">※ お知らせ ※ システムメンテナンスは毎月第2日曜 0:00〜6:00に実施いたします（2026年10月現在）※ 当サイトはInternet Explorer 5.0以上でご覧ください ※ 本日: <span id="today"></span></div>
+</div>
+<div class="nav">
+  <a href="#home">ホーム</a>｜<a href="#transfer">他行振込</a>｜<a href="#home">残高照会</a>｜<a href="#info">重要なお知らせ</a>｜<a href="#home">口座開設</a>｜<a href="#home">ローン</a>｜<a href="#home">外貨預金</a>｜<a href="#home">投資信託</a>｜<a href="#home">確定申告</a>｜<a href="#home">リンク集</a>｜<a href="#home">サイトマップ</a>｜<a href="#home">サイトポリシー</a>｜<a href="#home">採用情報</a>｜<a href="#home">英文サイト</a>｜<a href="#home">FAQ</a>
+</div>
+
+<!-- ============================== HOME ============================== -->
+<div id="view-home" class="content">
+  <div id="modal">
+    <div style="text-align:right;"><a href="#" onclick="closeModal()" style="font-size:8px;" aria-label="閉じる">閉じる[x]</a></div>
+    <div style="font-size:12px; font-weight:bold;">【重要】お知らせ</div>
+    <div style="font-size:10px; margin-top:6px;">
+      標的型攻撃へのご注意。当行をかたるサイトが確認されております。お客さまの暗証番号を当行がお聞きすることはございません。
+      詳細は以下よりご確認くださいませ。
+    </div>
+    <div style="margin-top:8px;"><a href="#info" style="font-size:10px;">重要なお知らせ一覧へ »</a></div>
+  </div>
+
+  <h2 style="font-size:14px;">ログイン</h2>
+  <form onsubmit="return false;">
+    <table class="form">
+      <tr><td>お客さま番号</td><td><input aria-label="お客さま番号" size="16"></td></tr>
+      <tr><td>暗証番号</td><td><input aria-label="暗証番号" type="password" size="10"></td></tr>
+    </table>
+    <button onclick="alert('メンテナンス中のため、現在ログインできません。')">ログイン</button>
+  </form>
+  <p class="note">※ご登録のお客さま番号は「お取引明細票」に記載されております。※暗証番号を3回誤入力されますと口座が凍結されます。</p>
+
+  <h2 style="font-size:14px;">ご案内</h2>
+  <table class="form" style="width:600px;">
+    <tr><td colspan="2">【貯蓄預金キャンペーン実施中】期間中のお預入れには1年物スーパー定期の金利を0.002%上乗せいたします（2026年3月31日終了・預金保険制度の対象外）。</td></tr>
+    <tr><td style="width:120px;">通常払込み</td><td>他行宛のお振込は「被仕向金融機関」を正確にご指定ください。被仕向店番号の下2桁が「01」の場合は「0」を省略してご入力ください。</td></tr>
+  </table>
+
+  <h2 style="font-size:14px;">本日の残高照会</h2>
+  <p class="note">残高照会はログイン後のご利用となります。メンテナンス中のため、メニューから「他行振込」をお試しください。</p>
+
+  <p class="note">あなたは <span style="font-family:monospace;">00274</span> 番目のお客さまです（1999年1月4日より）。</p>
+</div>
+
+<!-- ============================== INFO ============================== -->
+<div id="view-info" class="content">
+  <h2 style="font-size:14px;">重要なお知らせ一覧</h2>
+  <div style="width:640px;">
+    <p style="font-size:10px;">・システムメンテナンスは毎月第2日曜 0:00〜6:00に実施いたします。</p>
+    <p style="font-size:10px;">・ atm手数料改定のお知らせ（2026年4月1日より）。平日8:45以前、18:00以降のお引き出しは108円となります。</p>
+    <p style="font-size:10px;">・詐欺サイトにご注意ください。</p>
+    <p style="font-size:10px;">・投資信託の基準価額は毎日更新されます。</p>
+    <p style="font-size:10px;">・年末調整のお知らせ。住宅ローン控除をお使いのお客さまは確定申告書類をご確認ください。</p>
+    <p style="font-size:10px;">・キャッシュカード再発行には1,100円（税込）の手数料がかかります。</p>
+    <p style="font-size:10px;">・「通常払込み」「至急扱い（テレグラフ払）」の取り扱い時間は原則8:45〜15:25（土日祝除く）です。</p>
+    <p style="font-size:10px;">・外国為替の店頭表示はTTS/TTBベースとなります。</p>
+    <p style="font-size:10px;">・マイナンバーの利用目的について。</p>
+  </div>
+  <p><a href="#home" style="font-size:10px;">« ホームへ戻る</a></p>
+</div>
+
+<!-- ============================== TRANSFER ============================== -->
+<div id="view-transfer" class="content">
+  <h2 style="font-size:14px;">他行振込（通常払込み）</h2>
+  <form id="transfer-form" onsubmit="return false;">
+    <table class="form" style="width:520px;">
+      <tr><td style="width:170px;">お振込金額（円）</td><td><input aria-label="お振込金額" size="14"> 円</td></tr>
+      <tr><td>被仕向金融機関</td><td><select aria-label="被仕向金融機関"><option>みずほ</option><option>三井住友</option><option>三菱UFJ</option><option>ゆうちょ</option></select></td></tr>
+      <tr><td>被仕向科目</td><td><select aria-label="被仕向科目"><option>普通</option><option>当座</option><option>貯蓄</option></select></td></tr>
+      <tr><td>被仕向店番号</td><td><input aria-label="被仕向店番号" size="6"></td></tr>
+      <tr><td>受取人名（カナ）</td><td><input aria-label="受取人名カナ" size="24"></td></tr>
+      <tr><td>振込区分</td><td><select aria-label="振込区分"><option>通常扱い</option><option>至急扱い（テレグラフ払）</option></select></td></tr>
+    </table>
+    <p class="err" id="transfer-error">入力に誤りがあります。お振込金額をご入力ください。</p>
+    <div class="note" style="width:520px;">
+      ※ご利用に際しては「お取引規定（第5版）」をご確認ください。※1回あたりのお振込限度額は「お客さま番号」に紐づく本人認証区分により異なります。
+      ※被仕向店番号の下2桁が「01」の場合は「0」を省略してください。※至急扱い（テレグラフ払）の受付は平日15:25までです。
+      ※振込手数料はお振込金額と被仕向金融機関の種別により異なります（同一店あて:無料 / 同一銀行あて:110円 / 他行あて:330円〜）。※振込エラー時の返金には2〜3営業日を要します。
+      ※お取引内容は電磁的記録として保管され、監督官庁への報告対象となります。※万一の誤振込は当行では責任を負いかねます。
+      ※お取引の際は十分に内容をご確認のうえ、実行してください。※本画面の表示金額は消費税を含みません。
+    </div>
+    <div style="height:420px;"></div>
+    <button onclick="goConfirm()">確認画面へ »»»</button>
+  </form>
+</div>
+
+<!-- ============================== CONFIRM ============================== -->
+<div id="view-confirm" class="content">
+  <h2 style="font-size:14px;">振込内容の確認（通常払込み）</h2>
+  <table class="form" style="width:520px;">
+    <tr><td>お振込金額</td><td>30,000円</td></tr>
+    <tr><td>振込手数料</td><td>330円</td></tr>
+    <tr><td>合計（円）</td><td>30,330円</td></tr>
+  </table>
+  <p style="font-size:10px;">上記の内容でお間違えないでしょうか。「この内容で実行する」を選択されますと、取り消すことはできません。</p>
+  <p>
+    <button onclick="location.hash='#done'">この内容で実行する</button>
+    <button onclick="location.hash='#transfer'">訂正</button>
+    <a href="#home" style="font-size:10px;">やめる（ホームへ）</a>
+  </p>
+</div>
+
+<!-- ============================== DONE ============================== -->
+<div id="view-done" class="content">
+  <h2 style="font-size:14px;">取引完了</h2>
+  <p style="font-size:12px;">取引完了いたしました。受付番号: <span style="font-family:monospace;">2026-0012345</span></p>
+  <p style="font-size:10px;">お振込の実行は2〜3営業日後に反映されます。お取引ありがとうございました。</p>
+  <p><a href="#home" style="font-size:10px;">« ホームへ戻る</a></p>
+</div>
+
+<div class="footer">
+  みなと銀行 銀行_common_1998 | 〒100-0001 東京都中央区銀行1-2-3 | 当サイトの掲載内容はサンプル（デモ）です。
+</div>
+
+<script>
+  function closeModal() { var m = document.getElementById('modal'); if (m) m.style.display = 'none'; }
+  function goConfirm() {
+    var amount = document.querySelector('#view-transfer input[aria-label="お振込金額"]').value;
+    if (!amount || !/^[0-9]+$/.test(amount)) {
+      document.getElementById('transfer-error').style.display = 'block';
+      return;
+    }
+    document.getElementById('transfer-error').style.display = 'none';
+    location.hash = '#confirm';
+  }
+  function show() {
+    var h = (location.hash || '#home').replace('#', '');
+    var valid = ['home', 'info', 'transfer', 'confirm', 'done'];
+    if (valid.indexOf(h) < 0) h = 'home';
+    valid.forEach(function (v) {
+      document.getElementById('view-' + v).style.display = (v === h ? 'block' : 'none');
+    });
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener('hashchange', show);
+  document.getElementById('today').textContent = new Date().toLocaleDateString('ja-JP');
+  show();
+</script>
+</body>
+</html>

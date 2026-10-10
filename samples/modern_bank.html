@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>みなと銀行ネクスト</title>
+<style>
+  body { font-family: system-ui, "Hiragino Sans", sans-serif; background: #f7f8fa; color: #1a1c1f; margin: 0; }
+  header { background: #0f2b46; color: #fff; padding: 14px 28px; }
+  header h1 { font-size: 18px; margin: 0; }
+  nav { display: flex; gap: 18px; padding: 10px 28px; background: #fff; border-bottom: 1px solid #e5e7eb; }
+  nav a { font-size: 14px; color: #0f2b46; text-decoration: none; padding: 8px 14px; border-radius: 8px; }
+  nav a:hover { background: #eef3f8; }
+  .content { max-width: 760px; margin: 24px auto; padding: 0 20px; }
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
+  .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 20px; }
+  .card h2 { font-size: 16px; margin: 0 0 6px; }
+  .card p { font-size: 13px; color: #5b6470; margin: 0 0 12px; }
+  button { font-size: 15px; padding: 10px 22px; border-radius: 10px; border: none; cursor: pointer; }
+  .primary { background: #0f6bff; color: #fff; font-size: 16px; padding: 12px 26px; }
+  .ghost { background: #eef1f5; color: #333; }
+  input { font-size: 15px; padding: 10px 12px; border: 1px solid #c9ced6; border-radius: 8px; width: 240px; }
+  label { display: block; font-size: 13px; margin: 14px 0 4px; color: #333; }
+</style>
+</head>
+<body>
+<header><h1>みなと銀行ネクスト</h1></header>
+<nav>
+  <a href="#home">ホーム</a><a href="#send">送る</a><a href="#done">残高</a>
+</nav>
+
+<div id="view-home" class="content">
+  <h2>こんにちは。今日は何をしますか？</h2>
+  <div class="cards">
+    <div class="card">
+      <h2>お金を送る</h2>
+      <p>口座番号があれば、30秒で送れます。</p>
+      <a href="#send"><button class="primary">送る</button></a>
+    </div>
+    <div class="card">
+      <h2>残高を見る</h2>
+      <p>最新の残高とこの1か月の流れ。</p>
+      <a href="#done"><button class="ghost">見る</button></a>
+    </div>
+  </div>
+</div>
+
+<div id="view-send" class="content">
+  <h2>お金を送る</h2>
+  <label>送る金額</label>
+  <input aria-label="送る金額" placeholder="30,000">
+  <label>送り先の口座番号</label>
+  <input aria-label="送り先の口座番号" placeholder="1234567">
+  <p style="font-size:12px; color:#5b6470;">手数料は0円です。あとで内容を確認してから実行します。</p>
+  <p class="err" id="err" style="display:none; color:#c22;">金額を入力してください。</p>
+  <button class="primary" onclick="go()">内容を確認する</button>
+</div>
+
+<div id="view-confirm" class="content">
+  <h2>この内容でいいですか？</h2>
+  <p style="font-size:16px;">30,000円を送ります（手数料 0円）。</p>
+  <button class="primary" onclick="location.hash='#done'">送る</button>
+  <button class="ghost" onclick="location.hash='#send'">直す</button>
+</div>
+
+<div id="view-done" class="content">
+  <h2>取引完了</h2>
+  <p style="font-size:16px;">送りました。受付番号 2026-7654321。</p>
+  <a href="#home"><button class="ghost">ホームへ</button></a>
+</div>
+
+<script>
+  function go() {
+    var v = document.querySelector('input[aria-label="送る金額"]').value;
+    if (!/^[0-9,]+$/.test(v || '')) { document.getElementById('err').style.display = 'block'; return; }
+    document.getElementById('err').style.display = 'none';
+    location.hash = '#confirm';
+  }
+  function show() {
+    var h = (location.hash || '#home').replace('#', '');
+    ['home', 'send', 'confirm', 'done'].forEach(function (v) {
+      document.getElementById('view-' + v).style.display = (v === h ? 'block' : 'none');
+    });
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener('hashchange', show);
+  show();
+</script>
+</body>
+</html>
