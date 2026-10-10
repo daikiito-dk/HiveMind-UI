@@ -11,7 +11,7 @@ from .analyst import make_analyst, render_cohort_markdown, render_report_markdow
 from .behaviors import MockActionPolicy
 from .browser import PlaywrightBrowserFactory
 from .config import Config
-from .grok import GrokClient
+from .grok import GrokClient, GrokError
 from .persona import make_persona_generator
 from .recorder import SessionRecorder
 from .schemas import Persona, Report, RunSummary, SessionResult, StepRecord
@@ -66,6 +66,10 @@ def run_cohort(
     generator = make_persona_generator(config, grok)
     batch = generator.generate(context=context, task=task, count=count, language=language, seed=config.seed)
     personas = batch.personas
+    if not personas:
+        # A cohort of zero personas is not a result. Writing reports from it would look
+        # like a finding ("nothing could be tested") when it is a failure to generate.
+        raise GrokError("Phase 1 produced no personas; refusing to run an empty cohort.")
     for i, p in enumerate(personas, 1):
         if not p.id:
             p.id = f"p{i}"

@@ -150,28 +150,60 @@ class GrokClient:
 
     # ---------------------------------------------------------------- Phase 1
     def generate_personas(self, context: str, task: str, count: int, language: str) -> PersonaBatch:
+        """Generate the cohort, grounded in live X posts, and never return nothing.
+
+        `responses.parse` hands back a default-constructed `PersonaBatch` when the model's
+        answer cannot be parsed against the schema. That is indistinguishable from a
+        successful call that legitimately produced no personas, and it happened in
+        practice: a cohort spent 6 X-search rounds and 33 fetched posts, then ran zero
+        sessions and wrote a report implying nothing could be tested. So an empty result
+        is retried once with a blunter instruction, and then raised.
+        """
         from .prompts import persona_system_prompt
 
-        def call():
-            return self.client.responses.parse(
-                model=self.config.model,
-                input=[
-                    {"role": "system", "content": persona_system_prompt(task, context, count, language)},
-                    {"role": "user", "content": f"Research X and generate the {count} personas now."},
-                ],
-                tools=[_x_search_tool(self.config)],
-                text_format=PersonaBatch,
-                extra_body={"max_turns": self.config.search_max_turns},
-            )
+        system = persona_system_prompt(task, context, count, language)
+        notes: list[str] = []
+        for attempt in (1, 2):
+            user = f"Research X and generate the {count} personas now."
+            if attempt > 1:
+                user += (
+                    " Do the X research first, then answer with the PersonaBatch JSON only."
+                    f" The personas list MUST contain exactly {count} entries."
+                )
 
-        batch = self._call(call).output_parsed
-        batch.personas = batch.personas[:count]
-        for i, persona in enumerate(batch.personas):
-            persona.id = persona.id or f"p{i + 1}"
-            persona.generated_by = "grok"
-            if not persona.goal:
-                persona.goal = task
-        return batch
+            def call(u=user):
+                return self.client.responses.parse(
+                    model=self.config.model,
+                    input=[
+                        {"role": "system", "content": system},
+                        {"role": "user", "content": u},
+                    ],
+                    tools=[_x_search_tool(self.config)],
+                    text_format=PersonaBatch,
+                    extra_body={"max_turns": self.config.search_max_turns},
+                )
+
+            resp = self._call(call)
+            batch = resp.output_parsed
+            if batch is not None and batch.personas:
+                batch.personas = batch.personas[:count]
+                for i, persona in enumerate(batch.personas):
+                    persona.id = persona.id or f"p{i + 1}"
+                    persona.generated_by = "grok"
+                    if not persona.goal:
+                        persona.goal = task
+                return batch
+
+            text = getattr(resp, "output_text", "") or ""
+            notes.append(
+                f"attempt {attempt}: status={getattr(resp, 'status', None)!r}, "
+                f"personas={len(batch.personas) if batch else None}, output_chars={len(text)}"
+            )
+        raise GrokError(
+            "Phase 1 produced no personas (" + "; ".join(notes) + "). This is a model/parse "
+            "failure, not an empty cohort. Retry, or lower HIVEMIND_PERSONAS or "
+            "HIVEMIND_SEARCH_MAX_TURNS."
+        )
 
     # ---------------------------------------------------------------- Phase 2
     def decide_action(self, system_prompt: str, brief: str, screenshot_b64: str | None) -> Action:

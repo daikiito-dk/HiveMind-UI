@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 
 from hivemind.config import Config
+from hivemind.grok import GrokError
 from hivemind.recorder import OUTCOME_JA
 from hivemind.runner import list_runs, load_report, run_cohort
 
@@ -76,15 +77,21 @@ def cmd_run(args: argparse.Namespace) -> int:
         seed=args.seed,
     )
     print(bold(f"HiveMind-UI | mode={config.resolved_mode()} model={config.model} target={url}"))
-    summary, run_dir = run_cohort(
-        config,
-        target_url=url,
-        task=args.task,
-        context=args.context,
-        count=args.personas,
-        progress=_progress,
-        make_gif=not args.no_gif,
-    )
+    try:
+        summary, run_dir = run_cohort(
+            config,
+            target_url=url,
+            task=args.task,
+            context=args.context,
+            count=args.personas,
+            progress=_progress,
+            make_gif=not args.no_gif,
+        )
+    except GrokError as exc:
+        # Fail loudly and with a non-zero status: a cohort that never ran must not look
+        # like a cohort that ran and found nothing.
+        print(color(f"\n失敗: {exc}", "31"))
+        return 1
     print(bold(f"\nDone. Artifacts in {run_dir}"))
     print(f"  cohort report : {run_dir / 'cohort_report.md'}")
     print(f"  per-persona   : {run_dir / 'reports'}")
